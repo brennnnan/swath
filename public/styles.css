@@ -1,0 +1,151 @@
+.header {
+	margin: 0 auto;
+	height: 150px;
+	width: 800px;
+	border: 1px solid black;
+}
+
+.admin_info {
+	display: none;
+	font-family: AvenirNext-Regular;
+	font-size: 16px;
+	color: #000000;
+}
+
+.servant_info {
+	display: none;
+	font-family: AvenirNext-Regular;
+	font-size: 16px;
+	color: #000000;
+}
+
+.admin_attribute_list {
+
+}
+.header_upper_text {
+	/* Swath: */
+	font-family: AvenirNext-Regular;
+	font-size: 72px;
+	color: #000000;
+}
+
+.header_upper_text p{
+	margin: auto 12px;
+	text-align:center;
+}
+
+.header_lower_text {
+	/* send midi to an army: */
+	font-family: AvenirNext-Regular;
+	font-size: 24px;
+	color: #000000;
+}
+
+.header_lower_text p{
+	margin: auto 12px;
+	text-align:center;
+}
+
+.main_container {
+	width: 60%;
+	max-width: 600px;
+	margin: 60px auto;
+}
+
+.selection_box {
+	display: inline-block;
+	width: 44%;
+}
+
+#enclosure {
+	border: 1px solid black;
+	width: 800px;
+	margin: 0 auto;
+	height: 100%;
+}
+
+.button {
+	width: 100%;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    height: 160px;
+    border:1px #245ec6 solid;
+	font-family: AvenirNext-Regular;
+	font-size: 24px;
+	color: #000000;
+	-webkit-transition: background .6s; /* Safari */
+    transition: background .6s;
+}
+
+button:focus {
+	outline:0;
+}
+
+
+select {
+	font-family: AvenirNext-Regular;
+}
+
+.selection_box p {
+	font-family: AvenirNext-Regular;
+	font-size: 20px;
+	color: #000000;
+	text-align: center;
+}
+
+.button_container {
+	margin: 0 auto;
+	margin-top: 100px;
+	text-align: center;
+}
+
+.submit_button {
+	width: 100px;
+	height: 40px;
+	border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+	//border:1px #245ec6 solid;
+	font-family: AvenirNext-Regular;
+	font-size: 12px;
+}
+
+#master_button {
+	background: #83C37B;
+	border: 1px solid #979797;
+	border-radius: 8px;
+}
+
+#master_button:hover {
+	background: #bfffb7;
+}
+
+#servant_button {
+	background: #71BBCB;
+	border: 1px solid #979797;
+	border-radius: 8px;
+}
+
+#servant_button:hover {
+	background: #adf7ff;
+}
+
+#servant{
+	float: right;
+}
+
+
+.channel_display_box {
+	border: 1px solid black;
+	height: 60px;
+	transition: background .2s ease-in;
+}
+
+.note_light_up_container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 70px;
+}

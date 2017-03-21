@@ -1,31 +1,84 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>WebSockets - Simple chat</title>
+    <title>Swath - Midi control interface</title>
     <script src="libraries/webmidi.min.js" type="text/javascript"></script>
     <script src="libraries/p5.js" type="text/javascript"></script>
     <script src="libraries/p5.dom.js" type="text/javascript"></script>
-    <script src="./sketch.js" type="text/javascript"></script>
+	<link rel="stylesheet" type="text/css" href="styles.css">
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+	<script src="../frontend.js"></script>
     <style>
-        * { font-family:tahoma; font-size:12px; padding:0px; margin:0px; }
-        p { line-height:18px; }
-        div { width:500px; margin-left:auto; margin-right:auto;}
-        #content { padding:5px; background:#ddd; border-radius:5px; overflow-y: scroll;
-                   border:1px solid #CCC; margin-top:10px; height: 160px; }
         #input { border-radius:2px; border:1px solid #ccc;
                  margin-top:10px; padding:5px; width:400px;  }
-        #status { width:88px; display:block; float:left; margin-top:15px; }
     </style>
   </head>
   <body>
+	<div class="header">
+		<div class="header_upper_text">
+			<p>Swath</p>
+		</div>  
+		<div class="header_lower_text">
+			<p>send midi to an army of connected devices</p>
+		</div>
+	</div>
+	<div id="enclosure">  
+		<div class="main_container" id="main_container">
+			<div class="admin_info" id="admin_information">
+				<h3>Instructions</h3>
+				<p>1. Configure the settings on your DAW to send your MIDI to an internal midi bus (like the IAC driver on Macs).</p>
+				<p>2. Select that input for the browser from below.</p>
+				<select class="admin_attribute_list" id="midi_input_list">
+				</select>
+				<p>3. Select the number of channels you want to use for your output.</p>
+				<select class="admin_attribute_list" id="channel_list">
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+					<option value="5">5</option>
+					<option value="6">6</option>
+					<option value="7">7</option>
+					<option value="8">8</option>
+					<option value="9">9</option>
+					<option value="10">10</option>
+					<option value="11">11</option>
+					<option value="12">12</option>
+					<option value="13">13</option>
+					<option value="14">14</option>
+					<option value="15">15</option>
+					<option value="16">16</option>
+				</select>
+				<div class="button_container">
+					<button class="submit_button" id="admin_submit_button">Submit</button>
+				</div>
+
+			</div>
+			<div class="servant_info" id="servant_information">
+				<p>1. Select a midi output device from below</p>
+				<select class="servant_attribute_list" id="midi_output_list">
+				</select>
+				<p>2. Turn up your volume!</p>
+				<div class="button_container">
+					<button class="submit_button" id="servant_submit_button">Submit</button>
+				</div>
+			</div>
+			<div class="selection_box_container" id="boxes">
+				<div class="selection_box" id="master">
+					<button class="button" id="master_button">master</button>
+					<p>if you want to control</p>
+				</div>
+				<div class="selection_box" id="servant">
+					<button class="button" id="servant_button">servant</button>
+					<p>if you want to be controlled</p>
+				</div>
+			</div>
+		</div>
+	</div>
     <div id="content"></div>
-        <div>
-            <span id="status">Connecting...</span>
-            <input type="text" id="input"  />
-        </div>
-    <script src="../frontend.js"></script>
+    
   </body>
 </html>
 
+ 
