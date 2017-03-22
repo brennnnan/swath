@@ -61,7 +61,8 @@
 	border: 1px solid black;
 	width: 800px;
 	margin: 0 auto;
-	height: 100%;
+	height: calc(100% - 155px);
+	background: rgba(70,190,220, .1);
 }
 
 .button {
@@ -112,23 +113,23 @@ select {
 }
 
 #master_button {
-	background: #83C37B;
+	background: rgba(60,210,170,.6);
 	border: 1px solid #979797;
 	border-radius: 8px;
 }
 
 #master_button:hover {
-	background: #bfffb7;
+	background: rgba(60,210,170,.4);
 }
 
 #servant_button {
-	background: #71BBCB;
+	background: rgba(13,100,240,.4);
 	border: 1px solid #979797;
 	border-radius: 8px;
 }
 
 #servant_button:hover {
-	background: #adf7ff;
+	background: rgba(13,100,240,.2);
 }
 
 #servant{
@@ -139,6 +140,7 @@ select {
 .channel_display_box {
 	border: 1px solid black;
 	height: 60px;
+	background: rgb(255,255,255);
 	transition: background .2s ease-in;
 }
 

@@ -14,6 +14,8 @@ var express = require('express')
 const PORT = process.env.PORT || 3000;
 app.use(express.static(path.join(__dirname, 'public')));
 var server = http.createServer(app);
+var adminPresent = -1;
+var connectionCount = 0;
 var serverChannelCount = 1;
 var io = require('socket.io').listen(server); //pass a http.Server instance
 server.listen(PORT); //listen on port 
@@ -22,6 +24,11 @@ console.log('Server listening on port ' + PORT);
 
 io.on('connection', (socket) => {
 	var index = clients.push([socket, clients.length, 0]) - 1;
+	connectionCount++;
+	if (adminPresent == 1) {
+		console.log('admin here')
+		socket.emit('adminNotification');
+	}
 	var userRole = false;
 	console.log((new Date()) + ' Connection accepted.');
 	
@@ -29,6 +36,7 @@ io.on('connection', (socket) => {
 			userRole = htmlEntities(name.role);
 			if (userRole == 'admin') {
 				console.log((new Date()) + ' Admin is present with ' + name.channels + ' channels.');
+				adminPresent = 1;
 				clients[index][2] == 1;
 				var obj = {
 					group: -1
@@ -74,7 +82,11 @@ io.on('connection', (socket) => {
 	})
 	
 	
-	socket.on('disconnect', () => console.log('Client disconnected'));
+	socket.on('disconnect', () => {
+		connectionCount--;
+		if(userRole=='admin') adminPresent = 0;
+		console.log('Client disconnected')
+	});
 });
 
 function htmlEntities(str) {

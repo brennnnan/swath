@@ -3,9 +3,13 @@ $(function () {
 
     var input = $('#input');
 	var midiInput;
+	var midiOutput;
 	var channelCount = -1;
+	var webMidiEnabled = 0;
+	var indicatorLight = -1;
 	
     var notes = []
+	
     notes.push(new Audio('audio/2aa.wav'));
     notes.push(new Audio('audio/2b.wav'));
     notes.push(new Audio('audio/2c.wav'));
@@ -30,19 +34,33 @@ $(function () {
 	var myName = false;
 
 	var masterButton = document.getElementById('master_button');
-	masterButton.addEventListener('click', function(){roleSelected(0)}, true);
+	var rEvent = function(){roleSelected(0)}
+	masterButton.addEventListener('click', rEvent, true);
 	
 	var servantButton = document.getElementById('servant_button');
 	servantButton.addEventListener('click', function(){roleSelected(1)}, true);
 
 	socket.on('note', function(noteInfo) {
-		console.log('received');
 		if(noteInfo.note >= 0 && noteInfo.note < 128) {
 			console.log(myName+" received "+noteInfo.note);
             //output.playNote(noteInfo.note, "all", {time: WebMidi.time + 3000});
             //notes[(noteInfo.note+2)%12].play();
-            //setTimeout(function(){output.stopNote(noteInfo.note)}, 3500);
         }	
+	})
+	
+	socket.on('noteon', function(noteInfo) {
+		if(noteInfo.note >= 0 && noteInfo.note < 128) {
+			indicatorLight.style.background = "#E066FF";
+			if(!webMidiEnabled) notes[(noteInfo.note+2)%12].play();
+			else midiOutput.playNote(noteInfo.note);
+		}
+	})
+	
+	socket.on('noteoff', function(noteInfo) {
+		if(noteInfo.note >= 0 && noteInfo.note < 128) {
+			indicatorLight.style.background = "#FFF";
+			if(webMidiEnabled) midiOutput.stopNote(noteInfo.note)
+		}
 	})
 	
 	socket.on('receipt', function(receiptInfo) {
@@ -51,9 +69,12 @@ $(function () {
 		else loadServantInfoInterface();
 	})
 	
+	socket.on('adminNotification', function() {
+		masterButton.removeEventListener('click', rEvent, true);
+	})
 	
+	// Confirms landing page selection with server
 	function roleSelected(role) {
-		console.log(role+' stuf')
 		if(role===0) {
 			var obj = {
 				role: 'admin'
@@ -67,16 +88,21 @@ $(function () {
 		}
 	}
 	
+	// Attempts to activate webMidi and sets up
 	function enableMidi(role) {
 		WebMidi.enable(function (err) {
   
     		if (err) {
       			console.log("WebMidi could not be enabled.", err);
     		} else {
+				webMidiEnabled = 1;
       			console.log("WebMidi enabled!");
       			console.log(WebMidi.inputs);
       			console.log(WebMidi.outputs);
+				
+				
 				if(role=='admin') {
+					// Sets up select dropdown for midi inputs and channels
 					var midiInputs = document.getElementById('midi_input_list')
 					var options = [];
 		  			for(var d=0; d<WebMidi.inputs.length; d++) {
@@ -98,11 +124,10 @@ $(function () {
 						channelCount = this.value;
 						console.log(channelCount)
 					}
-					var submitButton = document.getElementById('admin_submit_button')
-					submitButton.addEventListener("click", loadAdminDisplay)
 		  		}
 				
 				if(role=='servant') {
+					// sets up select dropdown for midi outputs 
 					var midiOutputs = document.getElementById('midi_output_list')
 					var options = [];
 		  			for(var d=0; d<WebMidi.outputs.length; d++) {
@@ -118,26 +143,32 @@ $(function () {
 					midiOutputs.onchange = function() {
 						midiOutput = WebMidi.getOutputByName(this.value);
   					}
-					var submitButton = document.getElementById('servant_submit_button')
-					submitButton.addEventListener("click", loadServantDisplay)
 				}
 				
 			}
     	});
 	}
 	
+	
+	// Hides landing page and gets admin settings
 	function loadAdminInfoInterface() {
 		enableMidi('admin');
+		var submitButton = document.getElementById('admin_submit_button')
+		submitButton.addEventListener("click", loadAdminDisplay)
 		document.getElementById("boxes").style.display = "none";
 		document.getElementById("admin_information").style.display = "block"
 	}
 	
+	// Hides landing page and gets servant settings
 	function loadServantInfoInterface() {
 		enableMidi('servant');
+		var submitButton = document.getElementById('servant_submit_button')
+		submitButton.addEventListener("click", loadServantDisplay)
 		document.getElementById("boxes").style.display = "none";
-		document.getElementById("servant_information").style.display = "block"
+		document.getElementById("servant_information").style.display = "block";
 	}
 	
+	//Hides settings pages and sets up note indicator pages
 	function loadAdminDisplay() {
 		var obj = {
 			channelCount: channelCount
@@ -170,7 +201,7 @@ $(function () {
 				//console.log("Received 'noteon' message (" + e.note.name + e.note.octave + "1). ");
 					boxes[_myCount-1].style.background = "#E066FF";
 					var obj = {
-						note: e.note,
+						note: e.number,
 						channel: _myCount
 					}
 					socket.emit('noteon',obj);
@@ -179,7 +210,7 @@ $(function () {
 				//console.log("Received 'noteoff' message (" + e.note.name + e.note.octave + "1). ");
 					boxes[_myCount-1].style.background = "#FFF";
 					var obj = {
-						note: e.note,
+						note: e.number,
 						channel: _myCount
 					}
 					socket.emit('noteoff',obj);
@@ -196,18 +227,11 @@ $(function () {
 		var mainContainer = document.getElementById("main_container");
 		mainContainer.appendChild(note_sent_display);
 		
-		var div = document.createElement('div')
-		div.setAttribute('class', 'channel_display_box');
-		div.style.width = "40%"
-		note_sent_display.appendChild(div);
-		
-		midiInput.addListener('noteon', "all", function (e) {
-			div.style.background = "#E066FF";
-		});
-		
-		midiOuput.addListener('noteoff', "all", function (e) {
-			div.style.background = "#FFF";
-		});	
+		indicatorLight = document.createElement('div')
+		indicatorLight.setAttribute('id', 'note_indicator');
+		indicatorLight.setAttribute('class', 'channel_display_box');
+		indicatorLight.style.width = "40%";
+		note_sent_display.appendChild(indicatorLight);
 	}
 
 });
