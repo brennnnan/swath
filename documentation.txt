@@ -1,0 +1,10 @@
+System Flow
+
+- Server initialized and listens on port specified
+
+- Client connects  and initializes socket with server
+	
+	- When client clicks on one of the buttons, notification of user role is sent to server
+	- Corresponding interface is loaded on front end
+	
+	
