@@ -54,7 +54,7 @@ $(function () {
 		if(displayEnabled && myName!='admin') {
 			if(noteInfo.note >= 0 && noteInfo.note < 128) {
 				indicatorLight.style.background = "#E066FF";
-				if(!webMidiEnabled) notes[(noteInfo.note+2)%12].play();
+				notes[(noteInfo.note+2)%12].play();
 				//else midiOutput.playNote(noteInfo.note);
 			}
 		}
