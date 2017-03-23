@@ -233,6 +233,11 @@ $(function () {
 	}
 	
 	function makeIndicator(_callback){
+		document.getElementById("servant_information").style.display = "none"
+		var note_sent_display = document.createElement('div');
+		note_sent_display.setAttribute('class', 'note_light_up_container')
+		var mainContainer = document.getElementById("main_container");
+		mainContainer.appendChild(note_sent_display);
 		indicatorLight = document.createElement('div')
 		indicatorLight.setAttribute('id', 'note_indicator');
 		indicatorLight.setAttribute('class', 'channel_display_box');
@@ -242,11 +247,7 @@ $(function () {
 	}
 	
 	function loadServantDisplay() {
-		document.getElementById("servant_information").style.display = "none"
-		var note_sent_display = document.createElement('div');
-		note_sent_display.setAttribute('class', 'note_light_up_container')
-		var mainContainer = document.getElementById("main_container");
-		mainContainer.appendChild(note_sent_display);
+		
 		
 		makeIndicator(function() {
         	displayEnabled = 1;
