@@ -7,6 +7,8 @@ $(function () {
 	var channelCount = -1;
 	var webMidiEnabled = 0;
 	var indicatorLight = -1;
+	var displayEnabled = -1;
+
 	
     var notes = []
 	
@@ -48,18 +50,22 @@ $(function () {
         }	
 	})
 	
-	socket.on('noteon', function(noteInfo) {
-		if(noteInfo.note >= 0 && noteInfo.note < 128) {
-			indicatorLight.style.background = "#E066FF";
-			if(!webMidiEnabled) notes[(noteInfo.note+2)%12].play();
-			else midiOutput.playNote(noteInfo.note);
+	socket.on('noteOn', function(noteInfo) {
+		if(displayEnabled && myName!='admin') {
+			if(noteInfo.note >= 0 && noteInfo.note < 128) {
+				indicatorLight.style.background = "#E066FF";
+				if(!webMidiEnabled) notes[(noteInfo.note+2)%12].play();
+				//else midiOutput.playNote(noteInfo.note);
+			}
 		}
 	})
 	
-	socket.on('noteoff', function(noteInfo) {
-		if(noteInfo.note >= 0 && noteInfo.note < 128) {
-			indicatorLight.style.background = "#FFF";
-			if(webMidiEnabled) midiOutput.stopNote(noteInfo.note)
+	socket.on('noteOff', function(noteInfo) {
+		if(displayEnabled && myName!='admin') {
+			if(noteInfo.note >= 0 && noteInfo.note < 128) {
+				indicatorLight.style.background = "#FFF";
+				if(!webMidiEnabled) midiOutput.stopNote(noteInfo.note)
+			}
 		}
 	})
 	
@@ -74,8 +80,10 @@ $(function () {
 	})
 	
 	// Confirms landing page selection with server
+	// sends role as 'name' msg
 	function roleSelected(role) {
 		if(role===0) {
+			myName = 'admin'
 			var obj = {
 				role: 'admin'
 			}
@@ -139,7 +147,7 @@ $(function () {
 		    			option.innerHTML = options[i];
 		    			midiOutputs.appendChild(option);
 		  			}
-
+					if(options.length>0) midiOutput = WebMidi.getOutputByName(options[0])
 					midiOutputs.onchange = function() {
 						midiOutput = WebMidi.getOutputByName(this.value);
   					}
@@ -193,27 +201,31 @@ $(function () {
 			note_sent_display.appendChild(div);
 		}
 		
-		//bind display boxes to channel listeners
+		// bind display boxes to channel listeners
+		// SENDING NOTES TAKES PLACE HERE
 		for(var g=1; g<=channelCount; g++){
 			var myCount = g;
 			(function (_myCount) {
 				midiInput.addListener('noteon', _myCount, function (e) {
-				//console.log("Received 'noteon' message (" + e.note.name + e.note.octave + "1). ");
+					//console.log("Received 'noteon' message (" + e.note.name + e.note.octave + " from channel"+_myCount+"). ");
 					boxes[_myCount-1].style.background = "#E066FF";
+					
 					var obj = {
-						note: e.number,
+						note: e.note.number,
 						channel: _myCount
 					}
-					socket.emit('noteon',obj);
+					
+					socket.emit('noteOn',obj);
 				});
 				midiInput.addListener('noteoff', _myCount, function (e) {
-				//console.log("Received 'noteoff' message (" + e.note.name + e.note.octave + "1). ");
+					//console.log("Received 'noteoff' message (" + e.note.name + e.note.octave + "1). ");
 					boxes[_myCount-1].style.background = "#FFF";
+					
 					var obj = {
-						note: e.number,
+						note: e.note.number,
 						channel: _myCount
 					}
-					socket.emit('noteoff',obj);
+					socket.emit('noteOff',obj);
 				});
 			})(myCount);
 			
@@ -232,6 +244,8 @@ $(function () {
 		indicatorLight.setAttribute('class', 'channel_display_box');
 		indicatorLight.style.width = "40%";
 		note_sent_display.appendChild(indicatorLight);
+		
+		displayEnabled = 1;
 	}
 
 });

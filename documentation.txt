@@ -8,3 +8,9 @@ System Flow
 	- Corresponding interface is loaded on front end
 	
 	
+	
+	
+	
+- All servants to get to room before masters go into room 1
+
+- When server finds out about number of channels it creates remaining rooms

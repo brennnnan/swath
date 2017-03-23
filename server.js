@@ -23,12 +23,16 @@ console.log('Server listening on port ' + PORT);
 
 
 io.on('connection', (socket) => {
+	var group = 1;
 	var index = clients.push([socket, clients.length, 0]) - 1;
 	connectionCount++;
+	
+	// Notify new connections if admin is present so that only servant option is available
 	if (adminPresent == 1) {
-		console.log('admin here')
+		//console.log('admin here')
 		socket.emit('adminNotification');
 	}
+	
 	var userRole = false;
 	console.log((new Date()) + ' Connection accepted.');
 	
@@ -46,8 +50,10 @@ io.on('connection', (socket) => {
 		
 			else {
 				console.log((new Date()) + ' User is known as: ' + userRole + '.');
+				group = (index)%serverChannelCount;
+				socket.join(group);
 				var obj = {
-					group: 2
+					group: group
 				}
 				socket.emit('receipt', obj);
 				//return group membership id over socket
@@ -81,6 +87,17 @@ io.on('connection', (socket) => {
 		} */
 	})
 	
+	
+	socket.on('noteOn', (noteInfo) => {
+		io.in(noteInfo.channel).emit('noteOn', noteInfo)
+		//socket.broadcast.emit('noteOn', noteInfo);
+		console.log('got noteon from channel '+noteInfo.channel);
+	})
+	
+	socket.on('noteOff', (noteInfo) => {
+		socket.broadcast.emit('noteOff', noteInfo);
+		console.log('got noteoff');
+	})
 	
 	socket.on('disconnect', () => {
 		connectionCount--;
