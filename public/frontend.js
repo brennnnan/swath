@@ -12,18 +12,18 @@ $(function () {
 	
     var notes = []
 	
-    notes.push(new Audio('audio/2aa.wav'));
-    notes.push(new Audio('audio/2b.wav'));
-    notes.push(new Audio('audio/2c.wav'));
-    notes.push(new Audio('audio/2cc.wav'));
-    notes.push(new Audio('audio/2d.wav'));
-    notes.push(new Audio('audio/2dd.wav'));
-    notes.push(new Audio('audio/2e.wav'));
-    notes.push(new Audio('audio/2f.wav'));
-    notes.push(new Audio('audio/2ff.wav'));
-    notes.push(new Audio('audio/2g.wav'));
-    notes.push(new Audio('audio/2gg.wav'));
-    notes.push(new Audio('audio/3a.wav'));
+    notes.push(loadSound('audio/2aa.wav'));
+    notes.push(loadSound('audio/2b.wav'));
+    notes.push(loadSound('audio/2c.wav'));
+    notes.push(loadSound('audio/2cc.wav'));
+    notes.push(loadSound('audio/2d.wav'));
+    notes.push(loadSound('audio/2dd.wav'));
+    notes.push(loadSound('audio/2e.wav'));
+    notes.push(loadSound('audio/2f.wav'));
+    notes.push(loadSound('audio/2ff.wav'));
+    notes.push(loadSound('audio/2g.wav'));
+    notes.push(loadSound('audio/2gg.wav'));
+    notes.push(loadSound('audio/3a.wav'));
 	
 	
 	

@@ -50,8 +50,9 @@ io.on('connection', (socket) => {
 		
 			else {
 				console.log((new Date()) + ' User is known as: ' + userRole + '.');
-				group = (index)%serverChannelCount;
+				group = (index-1)%serverChannelCount+1;
 				socket.join(group);
+				console.log('group '+group+' joined/created')
 				var obj = {
 					group: group
 				}
@@ -90,6 +91,7 @@ io.on('connection', (socket) => {
 	
 	socket.on('noteOn', (noteInfo) => {
 		io.in(noteInfo.channel).emit('noteOn', noteInfo)
+		
 		//socket.broadcast.emit('noteOn', noteInfo);
 		console.log('got noteon from channel '+noteInfo.channel);
 	})
