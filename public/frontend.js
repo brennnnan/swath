@@ -12,19 +12,21 @@ $(function () {
 	
     var notes = []
 	
-    notes.push(loadSound('audio/2aa.wav'));
-    notes.push(loadSound('audio/2b.wav'));
-    notes.push(loadSound('audio/2c.wav'));
-    notes.push(loadSound('audio/2cc.wav'));
-    notes.push(loadSound('audio/2d.wav'));
-    notes.push(loadSound('audio/2dd.wav'));
-    notes.push(loadSound('audio/2e.wav'));
-    notes.push(loadSound('audio/2f.wav'));
-    notes.push(loadSound('audio/2ff.wav'));
-    notes.push(loadSound('audio/2g.wav'));
-    notes.push(loadSound('audio/2gg.wav'));
-    notes.push(loadSound('audio/3a.wav'));
-	
+    
+	function loadSounds() {
+		notes.push(loadSound('audio/2aa.wav'));
+		notes.push(loadSound('audio/2b.wav'));
+		notes.push(loadSound('audio/2c.wav'));
+		notes.push(loadSound('audio/2cc.wav'));
+		notes.push(loadSound('audio/2d.wav'));
+		notes.push(loadSound('audio/2dd.wav'));
+		notes.push(loadSound('audio/2e.wav'));
+		notes.push(loadSound('audio/2f.wav'));
+		notes.push(loadSound('audio/2ff.wav'));
+		notes.push(loadSound('audio/2g.wav'));
+		notes.push(loadSound('audio/2gg.wav'));
+		notes.push(loadSound('audio/3a.wav'));
+	}
 	
 	
 
@@ -102,6 +104,7 @@ $(function () {
   
     		if (err) {
       			console.log("WebMidi could not be enabled.", err);
+				loadSounds();
     		} else {
 				webMidiEnabled = 1;
       			console.log("WebMidi enabled!");
