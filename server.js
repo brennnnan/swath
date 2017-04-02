@@ -37,7 +37,7 @@ io.on('connection', (socket) => {
 	console.log((new Date()) + ' Connection accepted.');
 	
   	socket.on('name', (name) => {
-			userRole = htmlEntities(name.role);
+			userRole = name.role;
 			if (userRole == 'admin') {
 				console.log((new Date()) + ' Admin is present with ' + name.channels + ' channels.');
 				adminPresent = 1;
@@ -64,29 +64,7 @@ io.on('connection', (socket) => {
 	socket.on('adminInfo', (adminInfo) => {
 		serverChannelCount = adminInfo.channelCount;
 	})
-	
-	// only when admin sends note
-	socket.on('note', (noteinfo) => {
-		console.log((new Date()) + ' Received Message from ' + userName + ': ' + noteinfo.note);
-		// we want to keep history of all sent messages
-		var obj = {
-			time: (new Date()).getTime(),
-			note: noteinfo.note,
-			author: userName,
-		};
-                
-        history.push(obj);
-		history = history.slice(-100);
 
-		// broadcast message to all connected clients
-		socket.broadcast.emit('note', noteinfo);
-		/* send to individual channels based on ids
-		for(var i=0; i<clients.length; i++) {
-			if(clients[i][1]%serverChannelCount==noteinfo.channel-1 && clients[i][2]==0) {
-				socket.broadcast.to(clients[i][0].id).emit('note', noteinfo);
-			} 
-		} */
-	})
 	
 	
 	socket.on('noteOn', (noteInfo) => {
@@ -107,7 +85,3 @@ io.on('connection', (socket) => {
 		console.log('Client disconnected')
 	});
 });
-
-function htmlEntities(str) {
-	return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-}
