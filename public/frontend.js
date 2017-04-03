@@ -72,7 +72,9 @@ $(function () {
 	})
 	
 	socket.on('receipt', function(receiptInfo) {
-		console.log(receiptInfo.group)
+		console.log('user is in group '+receiptInfo.group)
+		
+		// loads appropriate ui depending on user type
 		if(receiptInfo.group == -1) loadAdminInfoInterface();
 		else loadServantInfoInterface();
 	})
@@ -98,7 +100,7 @@ $(function () {
 		}
 	}
 	
-	// Attempts to activate webMidi and sets up
+	// Attempts to activate webMidi and sets up, otherwise loads audio files
 	function enableMidi(role) {
 		WebMidi.enable(function (err) {
   

@@ -1,11 +1,8 @@
 'use strict';
-/**
- * Global variables
- */
-// latest 100 messages
-var history = [];
+
 // list of currently connected clients (users)
 var clients = [];
+
 //Setup
 var http = require('http');
 var path = require('path');
@@ -14,9 +11,12 @@ var express = require('express')
 const PORT = process.env.PORT || 3000;
 app.use(express.static(path.join(__dirname, 'public')));
 var server = http.createServer(app);
+
 var adminPresent = -1;
+
 var connectionCount = 0;
 var serverChannelCount = 1;
+
 var io = require('socket.io').listen(server); //pass a http.Server instance
 server.listen(PORT); //listen on port 
 console.log('Server listening on port ' + PORT);
@@ -56,11 +56,12 @@ io.on('connection', (socket) => {
 				var obj = {
 					group: group
 				}
-				socket.emit('receipt', obj);
 				//return group membership id over socket
+				socket.emit('receipt', obj);
 			}
 	})
 	
+	// Sets channelCount when admin sends
 	socket.on('adminInfo', (adminInfo) => {
 		serverChannelCount = adminInfo.channelCount;
 	})
@@ -68,6 +69,7 @@ io.on('connection', (socket) => {
 	
 	
 	socket.on('noteOn', (noteInfo) => {
+		// forward noteOn to all connections on channel
 		io.in(noteInfo.channel).emit('noteOn', noteInfo)
 		
 		//socket.broadcast.emit('noteOn', noteInfo);
@@ -75,7 +77,8 @@ io.on('connection', (socket) => {
 	})
 	
 	socket.on('noteOff', (noteInfo) => {
-		socket.broadcast.emit('noteOff', noteInfo);
+		// forward noteOff to all connections on channel
+		io.in(noteInfo.channel).emit('noteOff', noteInfo);
 		console.log('got noteoff');
 	})
 	
