@@ -11,14 +11,12 @@ body {
 
 .admin_info {
 	display: none;
-	//font-family: AvenirNext-Regular;
 	font-size: 16px;
 	color: #000000;
 }
 
 .servant_info {
 	display: none;
-	//font-family: AvenirNext-Regular;
 	font-size: 16px;
 	color: #000000;
 }
@@ -40,7 +38,6 @@ body {
 
 .header_lower_text {
 	/* send midi to an army: */
-	//font-family: AvenirNext-Regular;
 	font-size: 24px;
 	color: #000000;
 }
@@ -89,11 +86,9 @@ button:focus {
 
 
 select {
-	//font-family: AvenirNext-Regular;
 }
 
 .selection_box p {
-	//font-family: AvenirNext-Regular;
 	font-size: 20px;
 	color: #000000;
 	text-align: center;
@@ -112,7 +107,6 @@ select {
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
 	//border:1px #245ec6 solid;
-	//font-family: AvenirNext-Regular;
 	font-size: 12px;
 }
 

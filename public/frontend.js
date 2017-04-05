@@ -8,6 +8,7 @@ $(function () {
 	var webMidiEnabled = 0;
 	var indicatorLight = -1;
 	var displayEnabled = -1;
+	var history = []
 
 	
     var notes = []
@@ -44,17 +45,11 @@ $(function () {
 	var servantButton = document.getElementById('servant_button');
 	servantButton.addEventListener('click', function(){roleSelected(1)}, true);
 
-	socket.on('note', function(noteInfo) {
-		if(noteInfo.note >= 0 && noteInfo.note < 128) {
-			console.log(myName+" received "+noteInfo.note);
-            //output.playNote(noteInfo.note, "all", {time: WebMidi.time + 3000});
-            //notes[(noteInfo.note+2)%12].play();
-        }	
-	})
 	
 	socket.on('noteOn', function(noteInfo) {
 		if(displayEnabled && myName!='admin') {
 			if(noteInfo.note >= 0 && noteInfo.note < 128) {
+				history.push(noteInfo.note);
 				indicatorLight.style.background = "#E066FF";
 				notes[(noteInfo.note+2)%12].play();
 				//else midiOutput.playNote(noteInfo.note);
@@ -237,6 +232,7 @@ $(function () {
 		}
 	}
 	
+	// Creates light up indicator for note received
 	function makeIndicator(_callback){
 		document.getElementById("servant_information").style.display = "none"
 		var note_sent_display = document.createElement('div');
@@ -253,11 +249,9 @@ $(function () {
 	
 	function loadServantDisplay() {
 		
-		
 		makeIndicator(function() {
         	displayEnabled = 1;
     	});    
-		
 		
 	}
 
